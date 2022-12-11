@@ -7,21 +7,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class DaoHibernateRepository {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final PersonsRepository personsRepository;
 
-    public List<Persons> getPersonsByCity(String name) {
-        Query query = entityManager.createQuery("select p from Persons p where p.city_of_living =:city");
-        query.setParameter("city", name);
-        List<Persons> resultList = query.getResultList();
-        System.out.println(resultList);
-        return resultList;
+    public List<Persons> getPersonsByCity(String city_of_living){
+        return personsRepository.findByCity_of_living(city_of_living);
     }
 
+    public List<Persons> getPersonsByAge(Integer age){
+        return personsRepository.findByIdAgeLessThanOrderByIdAge(age);
+    }
+
+    public Optional<Persons> getPersonsByNameAndSurname(String name, String surname){
+        return personsRepository.findByIdNameAndIdSurname(name, surname);
+    }
 
 }
